@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  database-mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=sso
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - '3307:3306'
+    expose:
+      - 3306
+
+  backend:
+    build:
+      context: ../../back-end-nestjs-cinema
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      # - DATABASE_PORT=3306
+      # - DATABASE_HOST=localhost
+      - DATABASE_HOST=host.docker.internal
+    ports:
+      - 8000:8000
+    # volumes:
+    #   - /back-end-nestjs-cinema/cinema/backend # named volume
+    #   - /cinema/backend/node_modules # anonymous volume for node_modules only
+
+# docker compose -p cinema-mysql up -d
